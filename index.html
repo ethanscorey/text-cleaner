@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Text Cleaner</title>
+    </head>
+    <body>
+        <h1>Text Cleaner</h1>
+        <p>Enter the Google Doc URL below. Remember that the document must be shared with ethan.corey@theappeal.org</p>
+        <form id="document-url-form">
+            <label for="document_url">Document URL:</label>
+            <input type="text" id="document_url" name="document_url" placeholder="Enter document URL...">
+            <input type="submit" value="Submit">
+        </form>
+        <pre id="clean-text"></pre>
+        <script>
+            const form = document.getElementById('document-url-form');
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const documentUrl = form.elements.document_url.value;
+                const xhr = new XMLHttpRequest();
+                xhr.open("GET", "https://mcj1slays7.execute-api.us-east-2.amazonaws.com/prod/text-cleaner?document_url=" + documentUrl, true);
+                xhr.onload = () => {
+                    if (xhr.status === 200) {
+                        const cleanTextArea = document.getElementById('clean-text');
+                        cleanTextArea.innerHTML += JSON.parse(xhr.response)['body'];
+                    }
+                };
+                xhr.send();
+            });
+        </script>
+    </body>
+</html>
